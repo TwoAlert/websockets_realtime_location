@@ -1,0 +1,40 @@
+service: server-location
+runtime: nodejs
+entrypoint: node server.js
+
+env: flex
+
+runtime_config:
+  operating_system: ubuntu22
+# This sample incurs costs to run on the App Engine flexible environment.
+# The settings below are to reduce costs during testing and are not appropriate
+# for production use. For more information, see:
+# https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-with-app-yaml
+
+resources:
+  cpu: 1
+  memory_gb: 0.5
+  disk_size_gb: 10
+
+handlers:
+- url: /.*
+  script: auto
+  secure: always
+  redirect_http_response_code: 301
+
+instance_class: F2
+
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 5
+  cpu_utilization:
+    target_utilization: 0.5
+  max_concurrent_requests: 80
+
+network:
+  session_affinity: true
+
+env_variables:
+  MY_SECRET_TOKEN: 77h7epyR65z2dDIJm-p-B9zElhCE-0DJiLdMKA8mdfM
+  GOOGLE_APPLICATION_CREDENTIALS: ./twoalert-68c80-db0363a5f59e.json
+  DATABASE_URL: https://twoalert-68c80-default-rtdb.firebaseio.com/
